@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>出勤+-時間計算</title>
+  </head>
+  <body>
+    <p>基本労働時間：<input type="time" id="default_work_hour" value="07:45"></p>
+    <p>実績
+      <p>勤務時間：
+        <input type="time" id="start_time" value="09:00"> ~ <input type="time" id="end_time" value="17:45">
+      </p>
+      <p>休憩時間：
+        <input type="time" id="break_time" value="01:00">
+      </p>
+      <button id="calc_work_hour_diff" onclick=calc_work_hour_diff()>計算</button>
+      <p id="work_hour_diff"></p>
+    </p>
+    <script>
+
+      function calc_work_hour_diff() {
+        const workMin =
+          conv2Min(document.getElementById("end_time")) - conv2Min(document.getElementById("start_time"));
+        const breakMin = conv2Min(document.getElementById("break_time"));
+        const defaultWorkMin = conv2Min(document.getElementById("default_work_hour"));
+        const workMinDiff = workMin - breakMin - defaultWorkMin;
+        document.getElementById("work_hour_diff").innerHTML =
+          `${workMinDiff >= 0 ? "" : "-"}${~~(Math.abs(workMinDiff / 60))}:${Math.abs(workMinDiff % 60)}`;
+      }
+
+      function conv2Min(timeInputElm) {
+        return timeInputElm.value.split(":").map(Number).reduce((a, x, i) => a + x * (1 + (1 - i) * 59), 0)
+      }
+
+    </script>
+  </body>
+</html>
